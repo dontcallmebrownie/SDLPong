@@ -2,8 +2,8 @@
 #include <SDL.h>
 #include <stdio.h>
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 800;
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
 bool init();
 bool load();
@@ -11,7 +11,7 @@ void close();
 
 SDL_Window* win = NULL;
 SDL_Surface* scr = NULL;
-SDL_Surface* hello = NULL;
+SDL_Surface* xOut = NULL;
 
 
 
@@ -50,9 +50,9 @@ bool load() {
 
     bool success = true;
 
-    hello = SDL_LoadBMP( "./assets/hello.bmp" );
+    xOut = SDL_LoadBMP( "./assets/x.bmp" );
 
-    if( hello == NULL ) {
+    if( xOut == NULL ) {
 
         printf( "Load BMP Failed! Error: %s\n", SDL_GetError() );
         success = false;
@@ -63,8 +63,8 @@ return success;
 
 void close() {
 
-    SDL_FreeSurface( hello );
-    hello = NULL;
+    SDL_FreeSurface( xOut );
+    xOut = NULL;
 
     SDL_DestroyWindow( win );
     win = NULL;
@@ -88,11 +88,24 @@ int main( int argc, char* argv[] ) {
         }
         else {
 
-            SDL_BlitSurface( hello, NULL, scr, NULL);
+            bool Q = false;
 
-            SDL_UpdateWindowSurface(win);
+            SDL_Event e;
 
-            SDL_Event e; bool quit = false; while( quit == false ){ while( SDL_PollEvent( &e ) ){ if( e.type == SDL_QUIT ) quit = true; } }
+            while(!Q) {
+
+                while(SDL_PollEvent(&e) !=0) {
+
+                    if(e.type == SDL_QUIT) {
+
+                        Q = true;
+                    }
+
+                    SDL_BlitSurface( xOut, NULL, scr, NULL);
+
+                    SDL_UpdateWindowSurface(win);
+                }
+            }
         }
     }
 
