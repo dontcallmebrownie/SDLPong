@@ -1,17 +1,35 @@
 #include <iostream>
+#include <string>
+
 #include <SDL.h>
 #include <stdio.h>
 
+
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+
+enum keyPressSurf {
+
+KEY_PRESS_DEF,
+KEY_PRESS_UP,
+KEY_PRESS_DOWN,
+KEY_PRESS_LEFT,
+KEY_PRESS_RIGHT,
+KEY_PRESS_TOTAL
+
+};
 
 bool init();
 bool load();
 void close();
 
+SDL_Surface* loadSurface (std::string path);
+
 SDL_Window* win = NULL;
 SDL_Surface* scr = NULL;
-SDL_Surface* xOut = NULL;
+
+SDL_Surface* keyPres[ KEY_PRESS_TOTAL ];
+SDL_Surface* cur = NULL;
 
 
 
@@ -50,21 +68,69 @@ bool load() {
 
     bool success = true;
 
-    xOut = SDL_LoadBMP( "./assets/x.bmp" );
+    keyPres[KEY_PRESS_DEF] = loadSurface( "./assets/press.bmp" );
 
-    if( xOut == NULL ) {
+    if( keyPres[ KEY_PRESS_DEF ] == NULL ) {
 
-        printf( "Load BMP Failed! Error: %s\n", SDL_GetError() );
+        printf( "Load Failed! Error: %s\n", SDL_GetError() );
+        success = false;
+    }
+
+    keyPres[KEY_PRESS_UP] = loadSurface( "./assets/up.bmp" );
+
+    if( keyPres[ KEY_PRESS_UP ] == NULL ) {
+
+        printf( "Load Failed! Error: %s\n", SDL_GetError() );
+        success = false;
+    }
+
+    keyPres[KEY_PRESS_DOWN] = loadSurface( "./assets/down.bmp" );
+
+    if( keyPres[ KEY_PRESS_DOWN ] == NULL ) {
+
+        printf( "Load Failed! Error: %s\n", SDL_GetError() );
+        success = false;
+    }
+
+    keyPres[KEY_PRESS_LEFT] = loadSurface( "./assets/left.bmp" );
+
+    if( keyPres[ KEY_PRESS_LEFT ] == NULL ) {
+
+        printf( "Load Failed! Error: %s\n", SDL_GetError() );
+        success = false;
+    }
+
+    keyPres[KEY_PRESS_RIGHT] = loadSurface( "./assets/right.bmp" );
+
+    if( keyPres[ KEY_PRESS_RIGHT ] == NULL ) {
+
+        printf( "Load Failed! Error: %s\n", SDL_GetError() );
         success = false;
     }
 
 return success;
 }
 
+SDL_Surface* loadSurface( std::string path ) {
+
+    SDL_Surface* loaded = SDL_LoadBMP( path.c_str() );
+
+    if (loaded == NULL) {
+
+        printf("load bmp Failed! Error: %s\n", SDL_GetError());
+
+    }
+
+return loaded;
+}
+
 void close() {
 
-    SDL_FreeSurface( xOut );
-    xOut = NULL;
+    for(int i = 0; i < KEY_PRESS_TOTAL; ++i) {
+
+        SDL_FreeSurface(keyPres[i]);
+        keyPres[i] = NULL;
+    }
 
     SDL_DestroyWindow( win );
     win = NULL;
@@ -92,6 +158,8 @@ int main( int argc, char* argv[] ) {
 
             SDL_Event e;
 
+            cur = keyPres[KEY_PRESS_DEF];
+
             while(!Q) {
 
                 while(SDL_PollEvent(&e) !=0) {
@@ -101,7 +169,25 @@ int main( int argc, char* argv[] ) {
                         Q = true;
                     }
 
-                    SDL_BlitSurface( xOut, NULL, scr, NULL);
+                    switch(e.key.keysym.sym) {
+                        case SDLK_UP:
+                            cur = keyPres[KEY_PRESS_UP];
+                            break;
+                        case SDLK_DOWN:
+                            cur = keyPres[KEY_PRESS_DOWN];
+                            break;
+                        case SDLK_LEFT:
+                            cur = keyPres[KEY_PRESS_LEFT];
+                            break;
+                        case SDLK_RIGHT:
+                            cur = keyPres[KEY_PRESS_RIGHT];
+                            break;
+                        default:
+                            cur = keyPres[KEY_PRESS_DEF];
+                            break;
+                    }
+
+                    SDL_BlitSurface( cur, NULL, scr, NULL);
 
                     SDL_UpdateWindowSurface(win);
                 }
