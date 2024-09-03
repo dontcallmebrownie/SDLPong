@@ -4,6 +4,8 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
+
 
 
 const int SCREEN_WIDTH = 1920;
@@ -37,7 +39,7 @@ bool init() {
     else {
         std::cout << "SDL init success!\n";
 
-        win = SDL_CreateWindow ("Hello World!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        win = SDL_CreateWindow ("SDLPong", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
         if (win == NULL) {
                 std::cout << "Window init FAILED Error: " << SDL_GetError() << std::endl;
@@ -55,17 +57,15 @@ bool init() {
             }
             else {
 
-
-
                 int imgFlags = IMG_INIT_PNG;
                 if(!(IMG_Init(imgFlags) & imgFlags)) {
 
                     std::cout << "SDL_Image init Failed! Error: " << IMG_GetError() << std::endl;
                     success = false;
-                    }
                 }
             }
         }
+    }
 
 return success;
 }
@@ -157,6 +157,9 @@ void drawBoard() {
 
 int main( int argc, char* argv[] ) {
 
+    // TODO:
+    // Add a title screen
+
     if(!init()) {
 
         std::cout << "Failed to init SDL! \n";
@@ -186,6 +189,27 @@ int main( int argc, char* argv[] ) {
                 SDL_RenderClear(scr);
 
                 drawBoard();
+
+                // TODO:
+                // Draw Score
+
+                // TODO:
+                // Draw Paddles
+                /*
+                    Notes:
+                    left and right paddles are reversed from each other
+                    flag left and right as 1, 0 respectively and reverse the motion applied to the ball
+
+
+                */
+
+                // TODO:
+                // Draw Ball
+
+
+
+
+
 
                 SDL_RenderPresent(scr);
             }
