@@ -21,10 +21,6 @@ SDL_Renderer* scr = NULL;
 
 SDL_Texture* tex = NULL;
 
-//SDL_Surface* img = NULL;
-//SDL_Surface* cur = NULL;
-
-
 
 bool init() {
 
@@ -56,7 +52,7 @@ bool init() {
             }
             else {
 
-                SDL_SetRenderDrawColor(scr, 0x00, 0xFF, 0x00, 0x00);
+                SDL_SetRenderDrawColor(scr, 0x00, 0x00, 0x00, 0xff);
 
                 int imgFlags = IMG_INIT_PNG;
                 if(!(IMG_Init(imgFlags) & imgFlags)) {
@@ -101,7 +97,7 @@ return newTex;
 bool load() {
 
     bool success = true;
-
+/*
     tex = loadTex("./assets/tex.png");
 
     if(tex == NULL) {
@@ -109,7 +105,7 @@ bool load() {
         printf( "Load Failed! Error: %s\n", SDL_GetError() );
         success = false;
     }
-
+*/
 return success;
 }
 
@@ -159,9 +155,25 @@ int main( int argc, char* argv[] ) {
                     }
                 }
 
+                SDL_SetRenderDrawColor(scr, 0xff, 0xff, 0xff, 0xff);
                 SDL_RenderClear(scr);
 
-                SDL_RenderCopy(scr, tex, NULL, NULL);
+                SDL_Rect fillRect = { SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
+                SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0x00, 0xff);
+                SDL_RenderFillRect(scr, &fillRect);
+
+                SDL_Rect outlineRect = {SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, SCREEN_WIDTH * 2 /3, SCREEN_HEIGHT * 2 /3};
+                SDL_SetRenderDrawColor(scr, 0x00, 0xFF, 0x00, 0xff);
+                SDL_RenderDrawRect(scr, &outlineRect);
+
+                SDL_SetRenderDrawColor(scr, 0x00, 0x00, 0xff, 0xff);
+                SDL_RenderDrawLine(scr, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2);
+
+                SDL_SetRenderDrawColor(scr, 0xff, 0xff, 0x00, 0xff);
+                for(int i = 0; i < SCREEN_HEIGHT; i += 4) {
+
+                    SDL_RenderDrawPoint(scr, SCREEN_WIDTH / 2, i);
+                }
 
                 SDL_RenderPresent(scr);
             }
