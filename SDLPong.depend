@@ -1,9 +1,10 @@
 # depslib dependency file v1.0
-1725307472 source:e:\files\dev\sdlpong\sdlpong\main.cpp
+1725349376 source:e:\files\dev\sdlpong\sdlpong\main.cpp
+	<iostream>
+	<string>
+	<stdio.h>
 	<SDL.h>
 	<SDL_image.h>
-	<stdio.h>
-	<string>
 
 1725204194 e:\files\dev\sdlpong\sdlpong\sdl2\include\sdl2\sdl.h
 	"SDL_main.h"

@@ -1,8 +1,9 @@
 #include <iostream>
 #include <string>
+#include <stdio.h>
 
 #include <SDL.h>
-#include <stdio.h>
+#include <SDL_image.h>
 
 
 const int SCREEN_WIDTH = 640;
@@ -39,6 +40,7 @@ bool init() {
         win = SDL_CreateWindow ( "Hello World!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
 
         if ( win == NULL ) {
+
                 printf("Window init FAILED Error: %s\n", SDL_GetError() );
 
                 success = false;
@@ -47,7 +49,21 @@ bool init() {
 
             std::cout << "Window init success!\n";
 
-            scr = SDL_GetWindowSurface( win );
+            int imgFlags = IMG_INIT_PNG;
+
+            if(! (IMG_Init(imgFlags) & imgFlags)) {
+
+                printf("SDL_Image init Failed! Error: %s\n", IMG_GetError());
+
+                success = false;
+            }
+            else {
+
+                std::cout << "SDL_Image init success!\n";
+
+                scr = SDL_GetWindowSurface( win );
+
+            }
         }
     }
 
@@ -58,7 +74,7 @@ bool load() {
 
     bool success = true;
 
-    img = loadSurface( "./assets/stretch.bmp" );
+    img = loadSurface( "./assets/loaded.png" );
 
     if( img == NULL ) {
 
@@ -74,11 +90,11 @@ SDL_Surface* loadSurface( std::string path ) {
     SDL_Surface* optSurf = NULL;
 
 
-    SDL_Surface* loaded = SDL_LoadBMP( path.c_str() );
+    SDL_Surface* loaded = IMG_Load( path.c_str() );
 
     if (loaded == NULL) {
 
-        printf("load bmp Failed! Error: %s\n", SDL_GetError());
+        printf("load image Failed! Error: %s\n", SDL_GetError());
 
     }
     else {
