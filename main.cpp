@@ -14,13 +14,15 @@ bool init();
 bool load();
 void close();
 
-SDL_Surface* loadSurface (std::string path);
+SDL_Texture* loadTex (std::string path);
 
 SDL_Window* win = NULL;
-SDL_Surface* scr = NULL;
+SDL_Renderer* scr = NULL;
 
-SDL_Surface* img = NULL;
-SDL_Surface* cur = NULL;
+SDL_Texture* tex = NULL;
+
+//SDL_Surface* img = NULL;
+//SDL_Surface* cur = NULL;
 
 
 
@@ -28,66 +30,50 @@ bool init() {
 
     bool success = true;
 
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
+    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
 
-        printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-
+        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         success = false;
     }
     else {
         std::cout << "SDL init success!\n";
 
-        win = SDL_CreateWindow ( "Hello World!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+        win = SDL_CreateWindow ("Hello World!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
-        if ( win == NULL ) {
-
-                printf("Window init FAILED Error: %s\n", SDL_GetError() );
-
+        if (win == NULL) {
+                printf("Window init FAILED Error: %s\n", SDL_GetError());
                 success = false;
         }
         else {
 
             std::cout << "Window init success!\n";
 
-            int imgFlags = IMG_INIT_PNG;
+            scr = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+            if(scr == NULL) {
 
-            if(! (IMG_Init(imgFlags) & imgFlags)) {
-
-                printf("SDL_Image init Failed! Error: %s\n", IMG_GetError());
-
+                printf("Create Renderer Failed! Error: %s\n", SDL_GetError());
                 success = false;
             }
             else {
 
-                std::cout << "SDL_Image init success!\n";
+                SDL_SetRenderDrawColor(scr, 0x00, 0xFF, 0x00, 0x00);
 
-                scr = SDL_GetWindowSurface( win );
+                int imgFlags = IMG_INIT_PNG;
+                if(!(IMG_Init(imgFlags) & imgFlags)) {
 
+                    printf("SDL_Image init Failed! Error: %s\n", IMG_GetError());
+                    success = false;
+                    }
+                }
             }
         }
-    }
 
 return success;
 }
 
-bool load() {
+SDL_Texture* loadTex(std::string path) {
 
-    bool success = true;
-
-    img = loadSurface( "./assets/loaded.png" );
-
-    if( img == NULL ) {
-
-        printf( "Load Failed! Error: %s\n", SDL_GetError() );
-        success = false;
-    }
-
-return success;
-}
-
-SDL_Surface* loadSurface( std::string path ) {
-
-    SDL_Surface* optSurf = NULL;
+    SDL_Texture* newTex = NULL;
 
 
     SDL_Surface* loaded = IMG_Load( path.c_str() );
@@ -98,72 +84,86 @@ SDL_Surface* loadSurface( std::string path ) {
 
     }
     else {
-        optSurf = SDL_ConvertSurface(loaded, scr->format, 0);
-        if(optSurf == NULL) {
 
-            printf("Optimize img Failed! Error: %s\n", SDL_GetError());
+        newTex = SDL_CreateTextureFromSurface(scr, loaded);
+        if(newTex == NULL) {
+
+            printf("Create Texture Failed! Error: %s\n", SDL_GetError());
 
         }
 
         SDL_FreeSurface(loaded);
     }
 
-return optSurf;
+return newTex;
 }
+
+bool load() {
+
+    bool success = true;
+
+    tex = loadTex("./assets/tex.png");
+
+    if(tex == NULL) {
+
+        printf( "Load Failed! Error: %s\n", SDL_GetError() );
+        success = false;
+    }
+
+return success;
+}
+
 
 void close() {
 
-    SDL_FreeSurface(img);
-    img = NULL;
+    SDL_DestroyTexture(tex);
+    tex = NULL;
 
+    SDL_DestroyRenderer(scr);
+    scr = NULL;
 
     SDL_DestroyWindow( win );
     win = NULL;
 
     printf("Closing...\n");
 
+    IMG_Quit();
     SDL_Quit();
 
 }
 
 int main( int argc, char* argv[] ) {
 
-    if( !init() ) {
+    if(!init()) {
 
         printf("Failed to init SDL! \n");
     }
     else {
-        if( !load() ) {
+        if(!load()) {
 
             printf("Failed to Load img!\n");
         }
         else {
 
-            bool Q = false;
+            bool quit = false;
 
             SDL_Event e;
 
-            while(!Q) {
+            while(!quit) {
 
-                while(SDL_PollEvent(&e) !=0) {
+                while(SDL_PollEvent(&e) != 0) {
 
                     if(e.type == SDL_QUIT) {
 
-                        Q = true;
+                        quit = true;
                     }
-
-                    SDL_Rect stretch;
-                    stretch.x = 0;
-                    stretch.y = 0;
-                    stretch.w = SCREEN_WIDTH;
-                    stretch.h = SCREEN_HEIGHT;
-
-
-                    SDL_BlitScaled( img, NULL, scr, &stretch);
-
-                    SDL_UpdateWindowSurface(win);
-
                 }
+
+                SDL_RenderClear(scr);
+
+                SDL_RenderCopy(scr, tex, NULL, NULL);
+
+                SDL_RenderPresent(scr);
             }
         }
     }
