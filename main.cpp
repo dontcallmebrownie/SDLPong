@@ -8,16 +8,14 @@
 
 
 
-const int SCREEN_WIDTH = 1920;
-const int SCREEN_HEIGHT = 1080;
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
 
 bool init();
 bool load();
 void close();
 
-
-void drawBoard();
 
 SDL_Texture* loadTex (std::string path);
 
@@ -70,7 +68,7 @@ bool init() {
 return success;
 }
 
-/*
+
 SDL_Texture* loadTex(std::string path) {
 
     SDL_Texture* newTex = NULL;
@@ -97,19 +95,19 @@ SDL_Texture* loadTex(std::string path) {
 
 return newTex;
 }
-*/
+
 
 bool load() {
 
     bool success = true;
 
-   //tex = loadTex("./assets/null.png");
+    tex = loadTex("./assets/viewport.png");
 
-   // if(tex == NULL) {
+    if(tex == NULL) {
 
-   //     std::cout <<"Load Failed! Error: "  << SDL_GetError() << std::endl;
-   //      success = false;
-   //  }
+        std::cout <<"Load Failed! Error: "  << SDL_GetError() << std::endl;
+        success = false;
+    }
 
 return success;
 }
@@ -132,33 +130,7 @@ void close() {
 
 }
 
-void drawBoard() {
-
-    SDL_Rect boardRect = {(SCREEN_WIDTH / 2) - 2,  0, 5, 50};
-
-    for(int i = 0; i < SCREEN_HEIGHT; i++) {
-
-        //SDL_SetRenderDrawColor(scr, 0x00, 0xff, 0x00, 0xff);
-       // SDL_RenderDrawLine(scr, SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
-
-        SDL_SetRenderDrawColor(scr, 0xff, 0xff, 0xff, 0xff);
-        if(i == 0) {
-
-            boardRect.y = -25;
-        }
-        else {
-
-        boardRect.y += 60;
-        }
-
-        SDL_RenderFillRect(scr, &boardRect);
-    }
-}
-
 int main( int argc, char* argv[] ) {
-
-    // TODO:
-    // Add a title screen
 
     if(!init()) {
 
@@ -185,31 +157,33 @@ int main( int argc, char* argv[] ) {
                     }
                 }
 
-                SDL_SetRenderDrawColor(scr, 0x00, 0x00, 0x00, 0xff);
+                SDL_SetRenderDrawColor(scr, 0xff, 0xff, 0xff, 0xff);
                 SDL_RenderClear(scr);
 
-                drawBoard();
+                SDL_Rect TLPort;
+                TLPort.x = 0;
+                TLPort.y = 0;
+                TLPort.w = SCREEN_WIDTH / 2;
+                TLPort.h = SCREEN_HEIGHT / 2;
+                SDL_RenderSetViewport(scr, &TLPort);
+                SDL_RenderCopy(scr, tex, NULL, NULL);
 
-                // TODO:
-                // Draw Score
-
-                // TODO:
-                // Draw Paddles
-                /*
-                    Notes:
-                    left and right paddles are reversed from each other
-                    flag left and right as 1, 0 respectively and reverse the motion applied to the ball
-
-
-                */
-
-                // TODO:
-                // Draw Ball
+                SDL_Rect TRPort;
+                TRPort.x = SCREEN_WIDTH / 2;
+                TRPort.y = 0;
+                TRPort.w = SCREEN_WIDTH / 2;
+                TRPort.h = SCREEN_HEIGHT / 2;
+                SDL_RenderSetViewport(scr, &TRPort);
+                SDL_RenderCopy(scr, tex, NULL, NULL);
 
 
-
-
-
+                SDL_Rect BPort;
+                BPort.x = 0;
+                BPort.y = SCREEN_HEIGHT / 2;
+                BPort.w = SCREEN_WIDTH;
+                BPort.h = SCREEN_HEIGHT / 2;
+                SDL_RenderSetViewport(scr, &BPort);
+                SDL_RenderCopy(scr, tex, NULL, NULL);
 
                 SDL_RenderPresent(scr);
             }
