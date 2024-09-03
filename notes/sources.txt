@@ -1,0 +1,11 @@
+paddle.png:
+
+	taken as a note from:
+ATARI PONG E CIRCUIT ANALYSIS & LAWN TENNIS:
+BUILDING A DIGITAL VIDEO GAME WITH 74 SERIES TTL
+IC’s. 
+By Dr. H. Holden.
+
+https://www.pong-story.com/LAWN_TENNIS.pdf
+
+==
