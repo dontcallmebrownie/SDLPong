@@ -1,10 +1,12 @@
 # depslib dependency file v1.0
-1725383184 source:e:\files\dev\sdlpong\sdlpong\main.cpp
+1725405621 source:e:\files\dev\sdlpong\sdlpong\main.cpp
 	<iostream>
 	<string>
 	<stdio.h>
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_ttf.h>
+	"Texture.h"
 
 1725204194 e:\files\dev\sdlpong\sdlpong\sdl2\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -405,4 +407,20 @@
 	"SDL_version.h"
 	"begin_code.h"
 	"close_code.h"
+
+1705852475 e:\files\dev\sdlpong\sdlpong\sdl2\include\sdl2\sdl_ttf.h
+	"SDL.h"
+	"begin_code.h"
+	"close_code.h"
+
+1725405576 e:\files\dev\sdlpong\sdlpong\sdl2\include\texture.h
+	<iostream>
+	<string>
+	<SDL.h>
+	<SDL_image.h>
+
+1725307348 e:\files\dev\sdlpong\sdlpong\sdl2\include\sdl2
+
+1725405381 source:e:\files\dev\sdlpong\sdlpong\lib\texture.cpp
+	"Texture.h"
 

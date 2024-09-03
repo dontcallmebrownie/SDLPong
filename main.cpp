@@ -6,7 +6,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-
+#include "Texture.h"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -17,13 +17,11 @@ bool load();
 void close();
 
 
-SDL_Texture* loadTex (std::string path);
-
 SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
-SDL_Texture* tex = NULL;
-
+Texture fooTex;
+Texture BGTex;
 
 bool init() {
 
@@ -37,7 +35,7 @@ bool init() {
     else {
         std::cout << "SDL init success!\n";
 
-        win = SDL_CreateWindow ("SDLPong", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        win = SDL_CreateWindow ("Hello World!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
         if (win == NULL) {
                 std::cout << "Window init FAILED Error: " << SDL_GetError() << std::endl;
@@ -68,44 +66,19 @@ bool init() {
 return success;
 }
 
-
-SDL_Texture* loadTex(std::string path) {
-
-    SDL_Texture* newTex = NULL;
-
-
-    SDL_Surface* loaded = IMG_Load( path.c_str() );
-
-    if (loaded == NULL) {
-
-        std::cout <<"Load image Failed! Error: " << SDL_GetError() << std::endl;
-
-    }
-    else {
-
-        newTex = SDL_CreateTextureFromSurface(scr, loaded);
-        if(newTex == NULL) {
-
-            std::cout <<"Create Texture Failed! Error: " << SDL_GetError() << std::endl;
-
-        }
-
-        SDL_FreeSurface(loaded);
-    }
-
-return newTex;
-}
-
-
 bool load() {
 
     bool success = true;
 
-    tex = loadTex("./assets/viewport.png");
+    if(!fooTex.loadFile("./assets/foo.png")) {
 
-    if(tex == NULL) {
+        std::cout << "Failed to load foo.png!\n";
+        success = false;
+    }
 
-        std::cout <<"Load Failed! Error: "  << SDL_GetError() << std::endl;
+    if(!BGTex.loadFile("./assets/background.png")) {
+
+        std::cout << "Failed to load background.png!\n";
         success = false;
     }
 
@@ -114,8 +87,8 @@ return success;
 
 void close() {
 
-    SDL_DestroyTexture(tex);
-    tex = NULL;
+    fooTex.free();
+    BGTex.free();
 
     SDL_DestroyRenderer(scr);
     scr = NULL;
@@ -160,30 +133,8 @@ int main( int argc, char* argv[] ) {
                 SDL_SetRenderDrawColor(scr, 0xff, 0xff, 0xff, 0xff);
                 SDL_RenderClear(scr);
 
-                SDL_Rect TLPort;
-                TLPort.x = 0;
-                TLPort.y = 0;
-                TLPort.w = SCREEN_WIDTH / 2;
-                TLPort.h = SCREEN_HEIGHT / 2;
-                SDL_RenderSetViewport(scr, &TLPort);
-                SDL_RenderCopy(scr, tex, NULL, NULL);
-
-                SDL_Rect TRPort;
-                TRPort.x = SCREEN_WIDTH / 2;
-                TRPort.y = 0;
-                TRPort.w = SCREEN_WIDTH / 2;
-                TRPort.h = SCREEN_HEIGHT / 2;
-                SDL_RenderSetViewport(scr, &TRPort);
-                SDL_RenderCopy(scr, tex, NULL, NULL);
-
-
-                SDL_Rect BPort;
-                BPort.x = 0;
-                BPort.y = SCREEN_HEIGHT / 2;
-                BPort.w = SCREEN_WIDTH;
-                BPort.h = SCREEN_HEIGHT / 2;
-                SDL_RenderSetViewport(scr, &BPort);
-                SDL_RenderCopy(scr, tex, NULL, NULL);
+                BGTex.render(0, 0);
+                fooTex.render(240, 190);
 
                 SDL_RenderPresent(scr);
             }
