@@ -1,14 +1,12 @@
 #include "Texture.h"
 
-Texture::Texture()
-{
+Texture::Texture() {
     tex = NULL;
     w = 0;
     h = 0;
 }
 
-Texture::~Texture()
-{
+Texture::~Texture() {
     free();
 }
 
@@ -46,6 +44,7 @@ bool Texture::loadFile(std::string path){
 return tex != NULL;
 }
 
+#if defined(SDL_TTF_MAJOR_VERSION)
 bool Texture::loadText(std::string text, SDL_Color textColor) {
 
     free();
@@ -73,6 +72,7 @@ bool Texture::loadText(std::string text, SDL_Color textColor) {
 
 return tex != NULL;
 }
+#endif
 
 void Texture::free() {
 
@@ -99,7 +99,6 @@ void Texture::setAlpha(Uint8 alpha) {
 
     SDL_SetTextureAlphaMod(tex, alpha);
 }
-
 
 void Texture::render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip) {
 

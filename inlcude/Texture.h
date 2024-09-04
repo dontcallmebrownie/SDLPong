@@ -2,14 +2,14 @@
 #define TEXTURE_H
 
 #include <iostream>
-#include <string>>
+#include <string>
 
 #include <SDL.h>
 #include <SDL_image.h>
-#include <SDL_ttf.h>
+//#include <SDL_ttf.h>
 
 extern SDL_Renderer* scr;
-extern TTF_Font* font;
+//extern TTF_Font* font;
 
 class Texture {
 
@@ -20,7 +20,9 @@ public:
 
     bool loadFile(std::string path);
 
+    #if defined(SDL_TTF_MAJOR_VERSION)
     bool loadText(std::string text, SDL_Color textColor);
+    #endif
 
     void free();
 

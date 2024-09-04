@@ -1,32 +1,130 @@
-// Language Headers
 #include <iostream>
 #include <string>
 #include <stdio.h>
 #include <cmath>
 
-// Library Headers
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-
-// Custom Headers
 #include "Texture.h"
+#include "Button.h"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
+const int BUTTON_WIDTH = 300;
+const int BUTTON_HEIGHT = 200;
+const int TOTAL_BUTTONS = 4;
+
+   enum ButtonSpr {
+
+    BUTTON_SPRITE_MOUSE_OUT = 0,
+    BUTTON_SPRITE_MOUSE_OVER = 1,
+    BUTTON_SPRITE_MOUSE_DOWN = 2,
+    BUTTON_SPRITE_MOUSE_UP = 3,
+    BUTTON_SPRITE_TOTAL = 4
+    };
 
 bool init();
 bool load();
 void close();
 
-
+// Display related Globals
 SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
-TTF_Font* font = NULL;
-Texture textTex;
+class Button
+{
+public:
+    Button();
 
+    void setPos(int x, int y);
+
+    void handleEvent(SDL_Event* e);
+
+    void render();
+
+
+
+private:
+    SDL_Point pos;
+
+    ButtonSpr curSpr;
+};
+
+SDL_Rect sprClips[BUTTON_SPRITE_TOTAL];
+Texture buttonSprSheet;
+
+
+Button::Button() {
+
+    pos.x = 0;
+    pos.y = 0;
+
+    curSpr = BUTTON_SPRITE_MOUSE_OUT;
+}
+
+void Button::setPos(int x, int y) {
+
+    pos.x = x;
+    pos.y = y;
+}
+
+void Button::handleEvent(SDL_Event* e) {
+
+    if(e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP) {
+
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+
+        bool inside = true;
+
+        if(x < pos.x) {
+
+            inside = false;
+        }
+        else if(x > pos.x + BUTTON_WIDTH) {
+
+            inside = false;
+        }
+        else if(y < pos.y) {
+
+            inside = false;
+        }
+        else if (y > pos.y + BUTTON_HEIGHT) {
+
+            inside = false;
+        }
+
+        if(!inside) {
+
+            curSpr = BUTTON_SPRITE_MOUSE_OUT;
+        }
+        else {
+
+            switch (e->type) {
+            case SDL_MOUSEMOTION:
+                curSpr = BUTTON_SPRITE_MOUSE_OVER;
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                curSpr = BUTTON_SPRITE_MOUSE_DOWN;
+                break;
+            case SDL_MOUSEBUTTONUP:
+                curSpr = BUTTON_SPRITE_MOUSE_UP;
+                break;
+            }
+        }
+    }
+}
+
+void Button::render() {
+
+    buttonSprSheet.render(pos.x, pos.y, &sprClips[curSpr]);
+}
+
+// Sprite Var
+
+Button buttons[TOTAL_BUTTONS];
 
 bool init() {
 
@@ -81,20 +179,25 @@ bool load() {
 
     bool success = true;
 
-    font = TTF_OpenFont("./assets/lazy.ttf", 28);
-    if(font ==NULL) {
+    if(!buttonSprSheet.loadFile("./assets/button.png")) {
 
-        std::cout << "Failed to load Font! Error: " << TTF_GetError() << std::endl;
+        std::cout << "Failed to load Sprite sheet!\n";
         success = false;
     }
     else {
 
-        SDL_Color textColor = {0, 0, 0};
-        if(! textTex.loadText("The quick brown fox jumps over the lazy dog", textColor)) {
+        for(int i = 0; i < BUTTON_SPRITE_TOTAL; ++i) {
 
-            std::cout << "Failed to render text texture!\n";
-            success = false;
+            sprClips[i].x = 0;
+            sprClips[i].y = i * 200;
+            sprClips[i].w = BUTTON_WIDTH;
+            sprClips[i].h = BUTTON_HEIGHT;
         }
+
+        buttons[0].setPos( 0, 0 );
+		buttons[1].setPos( SCREEN_WIDTH - BUTTON_WIDTH, 0 );
+		buttons[2].setPos( 0, SCREEN_HEIGHT - BUTTON_HEIGHT );
+		buttons[3].setPos( SCREEN_WIDTH - BUTTON_WIDTH, SCREEN_HEIGHT - BUTTON_HEIGHT );
     }
 
 return success;
@@ -102,10 +205,7 @@ return success;
 
 void close() {
 
-    textTex.free();
-
-    TTF_CloseFont(font);
-    font = NULL;
+    buttonSprSheet.free();
 
     SDL_DestroyRenderer(scr);
     scr = NULL;
@@ -138,9 +238,6 @@ int main( int argc, char* argv[] ) {
 
             SDL_Event e;
 
-            double degrees = 0;
-
-            SDL_RendererFlip flipT = SDL_FLIP_NONE;
 
             while(!quit) {
 
@@ -150,15 +247,22 @@ int main( int argc, char* argv[] ) {
 
                         quit = true;
                     }
+
+                    for(int i = 0; i < TOTAL_BUTTONS; ++i) {
+
+                        buttons[i].handleEvent(&e);
+                    }
                 }
+
 
                 SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
                 SDL_RenderClear(scr);
 
-                // Actual code goes here                                                                // Div by 2 puts the text
-                                                                                                        // off screen at this res
-                textTex.render((SCREEN_WIDTH - textTex.getW()) / 2, (SCREEN_HEIGHT - textTex.getH() * 2 /* / 2 */));
+                // Actual code goes here
+                for(int i = 0; i < TOTAL_BUTTONS; ++i) {
 
+                    buttons[i].render();
+                }
 
                 SDL_RenderPresent(scr);
 

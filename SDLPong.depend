@@ -1,12 +1,14 @@
 # depslib dependency file v1.0
-1725408059 source:e:\files\dev\sdlpong\sdlpong\main.cpp
+1725463885 source:e:\files\dev\sdlpong\sdlpong\main.cpp
 	<iostream>
 	<string>
 	<stdio.h>
+	<cmath>
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
 	"Texture.h"
+	"Button.h"
 
 1725204194 e:\files\dev\sdlpong\sdlpong\sdl2\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -413,15 +415,31 @@
 	"begin_code.h"
 	"close_code.h"
 
-1725445795 e:\files\dev\sdlpong\sdlpong\sdl2\include\texture.h
+1725452247 e:\files\dev\sdlpong\sdlpong\sdl2\include\texture.h
 	<iostream>
 	<string>
 	<SDL.h>
 	<SDL_image.h>
-	<SDL_ttf.h>
 
 1725307348 e:\files\dev\sdlpong\sdlpong\sdl2\include\sdl2
 
-1725445738 source:e:\files\dev\sdlpong\sdlpong\lib\texture.cpp
+1725448080 source:e:\files\dev\sdlpong\sdlpong\lib\texture.cpp
 	"Texture.h"
+
+1725464162 source:e:\files\dev\sdlpong\sdlpong\lib\button.cpp
+	"Button.h"
+	"Texture.h"
+
+1725464957 e:\files\dev\sdlpong\sdlpong\inlcude\button.h
+	<iostream>
+	<string>
+	<SDL.h>
+	<SDL_image.h>
+	"Texture.h"
+
+1725459461 e:\files\dev\sdlpong\sdlpong\inlcude\texture.h
+	<iostream>
+	<string>
+	<SDL.h>
+	<SDL_image.h>
 
