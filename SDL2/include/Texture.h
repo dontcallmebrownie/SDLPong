@@ -20,6 +20,8 @@ public:
 
     void free();
 
+    void setColor(Uint8 r, Uint8 g, Uint8 b);
+
     void render(int x, int y, SDL_Rect* clip = NULL);
 
     int getW();

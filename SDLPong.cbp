@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="SDL2/include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="SDL2/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -38,6 +40,8 @@
 			<Add option="-lSDL2_mixer -lSDL2_ttf" />
 			<Add directory="E:/Files/dev/SDLPong/SDLPong/SDL2/lib" />
 		</Linker>
+		<Unit filename="SDL2/include/Texture.h" />
+		<Unit filename="lib/Texture.cpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

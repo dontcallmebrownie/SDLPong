@@ -20,8 +20,7 @@ void close();
 SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
-SDL_Rect sprClips[4];
-Texture sprSheet;
+Texture modColor;
 
 
 bool init() {
@@ -71,32 +70,10 @@ bool load() {
 
     bool success = true;
 
-    if(!sprSheet.loadFile("./assets/dots.png")) {
+    if(!modColor.loadFile("./assets/colors.png")) {
 
         std::cout << "Failed to load spritesheet!\n";
         success = false;
-    }
-    else {
-
-        sprClips[0].x = 0;
-        sprClips[0].y = 0;
-        sprClips[0].w = 100;
-        sprClips[0].h = 100;
-
-        sprClips[1].x = 100;
-        sprClips[1].y = 0;
-        sprClips[1].w = 100;
-        sprClips[1].h = 100;
-
-        sprClips[2].x = 0;
-        sprClips[2].y = 100;
-        sprClips[2].w = 100;
-        sprClips[2].h = 100;
-
-        sprClips[3].x = 100;
-        sprClips[3].y = 100;
-        sprClips[3].w = 100;
-        sprClips[3].h = 100;
     }
 
 return success;
@@ -104,7 +81,7 @@ return success;
 
 void close() {
 
-    sprSheet.free();
+    modColor.free();
 
     SDL_DestroyRenderer(scr);
     scr = NULL;
@@ -136,6 +113,10 @@ int main( int argc, char* argv[] ) {
 
             SDL_Event e;
 
+            Uint8 r = 255;
+            Uint8 g = 255;
+            Uint8 b = 255;
+
             while(!quit) {
 
                 while(SDL_PollEvent(&e) != 0) {
@@ -144,15 +125,46 @@ int main( int argc, char* argv[] ) {
 
                         quit = true;
                     }
+                    else if(e.type == SDL_KEYDOWN) {
+
+                        switch(e.key.keysym.sym) {
+
+                        case SDLK_q:
+                            r += 32;
+                            break;
+
+                        case SDLK_w:
+                            g += 32;
+                            break;
+
+                        case SDLK_e:
+                            b += 32;
+                            break;
+
+                        case SDLK_a:
+                            r -= 32;
+                            break;
+
+                        case SDLK_s:
+                            g -= 32;
+                            break;
+
+                        case SDLK_d:
+                            b -= 32;
+                            break;
+                        }
+                    }
+
+
                 }
 
                 SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
                 SDL_RenderClear(scr);
 
-                sprSheet.render(0, 0, &sprClips[0]);
-                sprSheet.render(SCREEN_WIDTH - sprClips[1].w, 0, &sprClips[1]);
-                sprSheet.render(0, SCREEN_HEIGHT - sprClips[2].h, &sprClips[2]);
-                sprSheet.render(SCREEN_WIDTH - sprClips[3].w, SCREEN_HEIGHT - sprClips[3].h, &sprClips[3]);
+                modColor.setColor(r, g, b);
+                modColor.render(0, 0);
+
+
 
                 SDL_RenderPresent(scr);
             }
