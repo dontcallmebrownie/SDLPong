@@ -20,7 +20,7 @@ public:
 
     void free();
 
-    void render(int x, int y);
+    void render(int x, int y, SDL_Rect* clip = NULL);
 
     int getW();
     int getH();

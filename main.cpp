@@ -20,8 +20,9 @@ void close();
 SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
-Texture fooTex;
-Texture BGTex;
+SDL_Rect sprClips[4];
+Texture sprSheet;
+
 
 bool init() {
 
@@ -70,16 +71,32 @@ bool load() {
 
     bool success = true;
 
-    if(!fooTex.loadFile("./assets/foo.png")) {
+    if(!sprSheet.loadFile("./assets/dots.png")) {
 
-        std::cout << "Failed to load foo.png!\n";
+        std::cout << "Failed to load spritesheet!\n";
         success = false;
     }
+    else {
 
-    if(!BGTex.loadFile("./assets/background.png")) {
+        sprClips[0].x = 0;
+        sprClips[0].y = 0;
+        sprClips[0].w = 100;
+        sprClips[0].h = 100;
 
-        std::cout << "Failed to load background.png!\n";
-        success = false;
+        sprClips[1].x = 100;
+        sprClips[1].y = 0;
+        sprClips[1].w = 100;
+        sprClips[1].h = 100;
+
+        sprClips[2].x = 0;
+        sprClips[2].y = 100;
+        sprClips[2].w = 100;
+        sprClips[2].h = 100;
+
+        sprClips[3].x = 100;
+        sprClips[3].y = 100;
+        sprClips[3].w = 100;
+        sprClips[3].h = 100;
     }
 
 return success;
@@ -87,8 +104,7 @@ return success;
 
 void close() {
 
-    fooTex.free();
-    BGTex.free();
+    sprSheet.free();
 
     SDL_DestroyRenderer(scr);
     scr = NULL;
@@ -130,11 +146,13 @@ int main( int argc, char* argv[] ) {
                     }
                 }
 
-                SDL_SetRenderDrawColor(scr, 0xff, 0xff, 0xff, 0xff);
+                SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
                 SDL_RenderClear(scr);
 
-                BGTex.render(0, 0);
-                fooTex.render(240, 190);
+                sprSheet.render(0, 0, &sprClips[0]);
+                sprSheet.render(SCREEN_WIDTH - sprClips[1].w, 0, &sprClips[1]);
+                sprSheet.render(0, SCREEN_HEIGHT - sprClips[2].h, &sprClips[2]);
+                sprSheet.render(SCREEN_WIDTH - sprClips[3].w, SCREEN_HEIGHT - sprClips[3].h, &sprClips[3]);
 
                 SDL_RenderPresent(scr);
             }
