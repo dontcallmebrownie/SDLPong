@@ -20,9 +20,8 @@ void close();
 SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
-const int WALK_ANIM_FRAMES = 4;
-SDL_Rect sprClips[WALK_ANIM_FRAMES];
-Texture sprSheet;
+
+Texture arrow;
 
 
 bool init() {
@@ -72,40 +71,19 @@ bool load() {
 
     bool success = true;
 
-    if(!sprSheet.loadFile("./assets/foo.png")) {
+    if(!arrow.loadFile("./assets/arrow.png")) {
 
         std::cout << "Failed to load sprite sheet!\n";
         success = false;
     }
-    else {
 
-        sprClips[0].x = 0;
-        sprClips[0].y = 0;
-        sprClips[0].w = 64;
-        sprClips[0].h = 205;
-
-        sprClips[1].x = 64;
-        sprClips[1].y = 0;
-        sprClips[1].w = 64;
-        sprClips[1].h = 205;
-
-        sprClips[2].x = 128;
-        sprClips[2].y = 0;
-        sprClips[2].w = 64;
-        sprClips[2].h = 205;
-
-        sprClips[3].x = 192;
-        sprClips[3].y = 0;
-        sprClips[3].w = 64;
-        sprClips[3].h = 205;
-    }
 
 return success;
 }
 
 void close() {
 
-    sprSheet.free();
+    arrow.free();
 
     SDL_DestroyRenderer(scr);
     scr = NULL;
@@ -137,7 +115,9 @@ int main( int argc, char* argv[] ) {
 
             SDL_Event e;
 
-            int frame = 0;
+            double degrees = 0;
+
+            SDL_RendererFlip flipT = SDL_FLIP_NONE;
 
             while(!quit) {
 
@@ -147,25 +127,43 @@ int main( int argc, char* argv[] ) {
 
                         quit = true;
                     }
+                    else if(e.type == SDL_KEYDOWN) {
+
+                            switch (e.key.keysym.sym) {
+
+                            case SDLK_a:
+                                degrees -= 60;
+                                break;
+                            case SDLK_d:
+                                degrees += 60;
+                                break;
+                            case SDLK_q:
+                                flipT = SDL_FLIP_HORIZONTAL;
+                                break;
+                            case SDLK_w:
+                                flipT = SDL_FLIP_NONE;
+                                break;
+                            case SDLK_e:
+                                flipT = SDL_FLIP_VERTICAL;
+                                break;
+
+
+                        }
+                    }
                 }
 
                 SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
                 SDL_RenderClear(scr);
 
-                SDL_Rect* cur = &sprClips[frame / 4];
-                sprSheet.render((SCREEN_WIDTH - cur->w) / 2, (SCREEN_HEIGHT - cur->h) / 2, cur);
+                arrow.render((SCREEN_WIDTH - arrow.getW()) / 2, (SCREEN_HEIGHT - arrow.getH()) / 2, NULL, degrees, NULL, flipT);
+
 
                 SDL_RenderPresent(scr);
 
-                ++frame;
-
-                if(frame / 4 >= WALK_ANIM_FRAMES) {
-
-                    frame = 0;
                 }
             }
         }
-    }
+
 
 
 

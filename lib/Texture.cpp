@@ -73,7 +73,7 @@ void Texture::setAlpha(Uint8 alpha) {
 }
 
 
-void Texture::render(int x, int y, SDL_Rect* clip) {
+void Texture::render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip) {
 
     SDL_Rect quad = {x, y, w, h};
     if(clip != NULL) {
@@ -82,7 +82,7 @@ void Texture::render(int x, int y, SDL_Rect* clip) {
         quad.h = clip->h;
     }
 
-    SDL_RenderCopy(scr, tex, clip, &quad);
+    SDL_RenderCopyEx(scr, tex, clip, &quad, angle, center, flip);
 }
 
 int Texture::getW() {
