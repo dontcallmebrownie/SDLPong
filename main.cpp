@@ -12,19 +12,6 @@
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-const int BUTTON_WIDTH = 300;
-const int BUTTON_HEIGHT = 200;
-const int TOTAL_BUTTONS = 4;
-
-enum ButtonSpr {
-
-    BUTTON_SPRITE_MOUSE_OUT = 0,
-    BUTTON_SPRITE_MOUSE_OVER = 1,
-    BUTTON_SPRITE_MOUSE_DOWN = 2,
-    BUTTON_SPRITE_MOUSE_UP = 3,
-    BUTTON_SPRITE_TOTAL = 4
-    };
-
 bool init();
 bool load();
 void close();
@@ -33,98 +20,12 @@ void close();
 SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
-SDL_Rect sprClips[BUTTON_SPRITE_TOTAL];
-Texture buttonSprSheet;
-
-
-class Button
-{
-public:
-    Button();
-
-    void setPos(int x, int y);
-
-    void handleEvent(SDL_Event* e);
-
-    void render();
-
-
-
-private:
-    SDL_Point pos;
-
-    ButtonSpr curSpr;
-};
-
-Button::Button() {
-
-    pos.x = 0;
-    pos.y = 0;
-
-    curSpr = BUTTON_SPRITE_MOUSE_OUT;
-}
-
-void Button::setPos(int x, int y) {
-
-    pos.x = x;
-    pos.y = y;
-}
-
-void Button::handleEvent(SDL_Event* e) {
-
-    if(e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP) {
-
-        int x, y;
-        SDL_GetMouseState(&x, &y);
-
-        bool inside = true;
-
-        if(x < pos.x) {
-
-            inside = false;
-        }
-        else if(x > pos.x + BUTTON_WIDTH) {
-
-            inside = false;
-        }
-        else if(y < pos.y) {
-
-            inside = false;
-        }
-        else if (y > pos.y + BUTTON_HEIGHT) {
-
-            inside = false;
-        }
-
-        if(!inside) {
-
-            curSpr = BUTTON_SPRITE_MOUSE_OUT;
-        }
-        else {
-
-            switch (e->type) {
-            case SDL_MOUSEMOTION:
-                curSpr = BUTTON_SPRITE_MOUSE_OVER;
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                curSpr = BUTTON_SPRITE_MOUSE_DOWN;
-                break;
-            case SDL_MOUSEBUTTONUP:
-                curSpr = BUTTON_SPRITE_MOUSE_UP;
-                break;
-            }
-        }
-    }
-}
-
-void Button::render() {
-
-    buttonSprSheet.render(pos.x, pos.y, &sprClips[curSpr]);
-}
-
 // Sprite Var
-
-Button buttons[TOTAL_BUTTONS];
+Texture presTex;
+Texture upTex;
+Texture downTex;
+Texture leftTex;
+Texture rightTex;
 
 bool init() {
 
@@ -179,33 +80,45 @@ bool load() {
 
     bool success = true;
 
-    if(!buttonSprSheet.loadFile("./assets/button.png")) {
+    int numLoaded = 0;
 
-        std::cout << "Failed to load Sprite sheet!\n";
+    if(!presTex.loadFile("./assets/press.png")) {
+
+        std::cout << "Failed to load! Texture #: 0\n";
         success = false;
     }
-    else {
+    else if(!upTex.loadFile("./assets/up.png")) {
 
-        for(int i = 0; i < BUTTON_SPRITE_TOTAL; ++i) {
-
-            sprClips[i].x = 0;
-            sprClips[i].y = i * 200;
-            sprClips[i].w = BUTTON_WIDTH;
-            sprClips[i].h = BUTTON_HEIGHT;
-        }
-
-        buttons[0].setPos( 0, 0 );
-		buttons[1].setPos( SCREEN_WIDTH - BUTTON_WIDTH, 0 );
-		buttons[2].setPos( 0, SCREEN_HEIGHT - BUTTON_HEIGHT );
-		buttons[3].setPos( SCREEN_WIDTH - BUTTON_WIDTH, SCREEN_HEIGHT - BUTTON_HEIGHT );
+        std::cout << "Failed to load! Texture #: 1\n";
+        success = false;
     }
+    else if(!downTex.loadFile("./assets/down.png")) {
+
+        std::cout << "Failed to load! Texture #: 2\n";
+        success = false;
+    }
+    else if(!leftTex.loadFile("./assets/left.png")) {
+
+        std::cout << "Failed to load! Texture #: 3\n";
+        success = false;
+    }
+    else if(!rightTex.loadFile("./assets/right.png")) {
+
+        std::cout << "Failed to load! Texture #: 4\n";
+        success = false;
+    }
+
 
 return success;
 }
 
 void close() {
 
-    buttonSprSheet.free();
+    presTex.free();
+    upTex.free();
+    downTex.free();
+    leftTex.free();
+    rightTex.free();
 
     SDL_DestroyRenderer(scr);
     scr = NULL;
@@ -238,6 +151,7 @@ int main( int argc, char* argv[] ) {
 
             SDL_Event e;
 
+            Texture* curTex = NULL;
 
             while(!quit) {
 
@@ -247,11 +161,28 @@ int main( int argc, char* argv[] ) {
 
                         quit = true;
                     }
+                }
 
-                    for(int i = 0; i < TOTAL_BUTTONS; ++i) {
+                const Uint8* curKeyState = SDL_GetKeyboardState(NULL);
+                if(curKeyState[SDL_SCANCODE_UP]){
 
-                        buttons[i].handleEvent(&e);
-                    }
+                    curTex = &upTex;
+                }
+                else if(curKeyState[SDL_SCANCODE_DOWN]){
+
+                    curTex = &downTex;
+                }
+                else if(curKeyState[SDL_SCANCODE_LEFT]){
+
+                    curTex = &leftTex;
+                }
+                else if(curKeyState[SDL_SCANCODE_RIGHT]){
+
+                    curTex = &rightTex;
+                }
+                else {
+
+                    curTex = &presTex;
                 }
 
 
@@ -259,10 +190,7 @@ int main( int argc, char* argv[] ) {
                 SDL_RenderClear(scr);
 
                 // Actual code goes here
-                for(int i = 0; i < TOTAL_BUTTONS; ++i) {
-
-                    buttons[i].render();
-                }
+                curTex->render(0, 0);
 
                 SDL_RenderPresent(scr);
 

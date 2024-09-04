@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1725478647 source:e:\files\dev\sdlpong\sdlpong\main.cpp
+1725484445 source:e:\files\dev\sdlpong\sdlpong\main.cpp
 	<iostream>
 	<string>
 	<stdio.h>
