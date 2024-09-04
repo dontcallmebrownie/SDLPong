@@ -16,7 +16,7 @@ const int BUTTON_WIDTH = 300;
 const int BUTTON_HEIGHT = 200;
 const int TOTAL_BUTTONS = 4;
 
-   enum ButtonSpr {
+enum ButtonSpr {
 
     BUTTON_SPRITE_MOUSE_OUT = 0,
     BUTTON_SPRITE_MOUSE_OVER = 1,
@@ -32,6 +32,10 @@ void close();
 // Display related Globals
 SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
+
+SDL_Rect sprClips[BUTTON_SPRITE_TOTAL];
+Texture buttonSprSheet;
+
 
 class Button
 {
@@ -51,10 +55,6 @@ private:
 
     ButtonSpr curSpr;
 };
-
-SDL_Rect sprClips[BUTTON_SPRITE_TOTAL];
-Texture buttonSprSheet;
-
 
 Button::Button() {
 

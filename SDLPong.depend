@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1725463885 source:e:\files\dev\sdlpong\sdlpong\main.cpp
+1725465049 source:e:\files\dev\sdlpong\sdlpong\main.cpp
 	<iostream>
 	<string>
 	<stdio.h>
@@ -426,16 +426,9 @@
 1725448080 source:e:\files\dev\sdlpong\sdlpong\lib\texture.cpp
 	"Texture.h"
 
-1725464162 source:e:\files\dev\sdlpong\sdlpong\lib\button.cpp
-	"Button.h"
-	"Texture.h"
+1725465049 source:e:\files\dev\sdlpong\sdlpong\lib\button.cpp
 
-1725464957 e:\files\dev\sdlpong\sdlpong\inlcude\button.h
-	<iostream>
-	<string>
-	<SDL.h>
-	<SDL_image.h>
-	"Texture.h"
+1725465049 e:\files\dev\sdlpong\sdlpong\inlcude\button.h
 
 1725459461 e:\files\dev\sdlpong\sdlpong\inlcude\texture.h
 	<iostream>
