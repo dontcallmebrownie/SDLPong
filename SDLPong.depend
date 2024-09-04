@@ -413,14 +413,15 @@
 	"begin_code.h"
 	"close_code.h"
 
-1725444003 e:\files\dev\sdlpong\sdlpong\sdl2\include\texture.h
+1725445795 e:\files\dev\sdlpong\sdlpong\sdl2\include\texture.h
 	<iostream>
 	<string>
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_ttf.h>
 
 1725307348 e:\files\dev\sdlpong\sdlpong\sdl2\include\sdl2
 
-1725444003 source:e:\files\dev\sdlpong\sdlpong\lib\texture.cpp
+1725445738 source:e:\files\dev\sdlpong\sdlpong\lib\texture.cpp
 	"Texture.h"
 

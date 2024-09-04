@@ -46,6 +46,34 @@ bool Texture::loadFile(std::string path){
 return tex != NULL;
 }
 
+bool Texture::loadText(std::string text, SDL_Color textColor) {
+
+    free();
+
+    SDL_Surface* textSurf = TTF_RenderText_Solid(font, text.c_str(), textColor);
+    if(textSurf == NULL) {
+
+        std::cout << "Failed to render text surface! Error: " << TTF_GetError() << std::endl;
+    }
+    else {
+
+        tex = SDL_CreateTextureFromSurface(scr, textSurf);
+        if(tex == NULL) {
+
+            std::cout << "Failed to create Texture from rendered text! Error: " << SDL_GetError() << std::endl;
+        }
+        else {
+
+            w = textSurf->w;
+            h = textSurf->h;
+        }
+
+        SDL_FreeSurface(textSurf);
+    }
+
+return tex != NULL;
+}
+
 void Texture::free() {
 
     if(tex != NULL) {

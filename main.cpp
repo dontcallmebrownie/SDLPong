@@ -1,11 +1,15 @@
+// Language Headers
 #include <iostream>
 #include <string>
 #include <stdio.h>
+#include <cmath>
 
+// Library Headers
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
+// Custom Headers
 #include "Texture.h"
 
 const int SCREEN_WIDTH = 640;
@@ -20,8 +24,8 @@ void close();
 SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
-
-Texture arrow;
+TTF_Font* font = NULL;
+Texture textTex;
 
 
 bool init() {
@@ -60,6 +64,12 @@ bool init() {
                     std::cout << "SDL_Image init Failed! Error: " << IMG_GetError() << std::endl;
                     success = false;
                 }
+
+                if(TTF_Init() == -1) {
+
+                    std::cout << "Failed to init SDL_ttf! Error: " << TTF_GetError() << std::endl;
+                    success = false;
+                }
             }
         }
     }
@@ -71,19 +81,31 @@ bool load() {
 
     bool success = true;
 
-    if(!arrow.loadFile("./assets/arrow.png")) {
+    font = TTF_OpenFont("./assets/lazy.ttf", 28);
+    if(font ==NULL) {
 
-        std::cout << "Failed to load sprite sheet!\n";
+        std::cout << "Failed to load Font! Error: " << TTF_GetError() << std::endl;
         success = false;
     }
+    else {
 
+        SDL_Color textColor = {0, 0, 0};
+        if(! textTex.loadText("The quick brown fox jumps over the lazy dog", textColor)) {
+
+            std::cout << "Failed to render text texture!\n";
+            success = false;
+        }
+    }
 
 return success;
 }
 
 void close() {
 
-    arrow.free();
+    textTex.free();
+
+    TTF_CloseFont(font);
+    font = NULL;
 
     SDL_DestroyRenderer(scr);
     scr = NULL;
@@ -93,6 +115,7 @@ void close() {
 
     std::cout << "Closing...\n";
 
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 
@@ -127,35 +150,14 @@ int main( int argc, char* argv[] ) {
 
                         quit = true;
                     }
-                    else if(e.type == SDL_KEYDOWN) {
-
-                            switch (e.key.keysym.sym) {
-
-                            case SDLK_a:
-                                degrees -= 60;
-                                break;
-                            case SDLK_d:
-                                degrees += 60;
-                                break;
-                            case SDLK_q:
-                                flipT = SDL_FLIP_HORIZONTAL;
-                                break;
-                            case SDLK_w:
-                                flipT = SDL_FLIP_NONE;
-                                break;
-                            case SDLK_e:
-                                flipT = SDL_FLIP_VERTICAL;
-                                break;
-
-
-                        }
-                    }
                 }
 
                 SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
                 SDL_RenderClear(scr);
 
-                arrow.render((SCREEN_WIDTH - arrow.getW()) / 2, (SCREEN_HEIGHT - arrow.getH()) / 2, NULL, degrees, NULL, flipT);
+                // Actual code goes here                                                                // Div by 2 puts the text
+                                                                                                        // off screen at this res
+                textTex.render((SCREEN_WIDTH - textTex.getW()) / 2, (SCREEN_HEIGHT - textTex.getH() * 2 /* / 2 */));
 
 
                 SDL_RenderPresent(scr);
