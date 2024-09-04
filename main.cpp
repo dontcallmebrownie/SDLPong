@@ -20,8 +20,9 @@ void close();
 SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
-Texture modTex;
-Texture bgTex;
+const int WALK_ANIM_FRAMES = 4;
+SDL_Rect sprClips[WALK_ANIM_FRAMES];
+Texture sprSheet;
 
 
 bool init() {
@@ -46,7 +47,7 @@ bool init() {
 
             std::cout << "Window init success!\n";
 
-            scr = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+            scr = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
             if(scr == NULL) {
 
                 std::cout << "Create Renderer Failed! Error: " << SDL_GetError() << std::endl;
@@ -71,20 +72,32 @@ bool load() {
 
     bool success = true;
 
-    if(!modTex.loadFile("./assets/fadeout.png")) {
+    if(!sprSheet.loadFile("./assets/foo.png")) {
 
-        std::cout << "Failed to load fadeout!\n";
+        std::cout << "Failed to load sprite sheet!\n";
         success = false;
     }
     else {
 
-        modTex.setBlendMode(SDL_BLENDMODE_BLEND);
-    }
+        sprClips[0].x = 0;
+        sprClips[0].y = 0;
+        sprClips[0].w = 64;
+        sprClips[0].h = 205;
 
-    if(!bgTex.loadFile("./assets/fadein.png")) {
+        sprClips[1].x = 64;
+        sprClips[1].y = 0;
+        sprClips[1].w = 64;
+        sprClips[1].h = 205;
 
-        std::cout << "Failed to load BG!\n";
-        success = false;
+        sprClips[2].x = 128;
+        sprClips[2].y = 0;
+        sprClips[2].w = 64;
+        sprClips[2].h = 205;
+
+        sprClips[3].x = 192;
+        sprClips[3].y = 0;
+        sprClips[3].w = 64;
+        sprClips[3].h = 205;
     }
 
 return success;
@@ -92,8 +105,7 @@ return success;
 
 void close() {
 
-    modTex.free();
-    bgTex.free();
+    sprSheet.free();
 
     SDL_DestroyRenderer(scr);
     scr = NULL;
@@ -125,8 +137,7 @@ int main( int argc, char* argv[] ) {
 
             SDL_Event e;
 
-            Uint8 a = 255;
-
+            int frame = 0;
 
             while(!quit) {
 
@@ -136,44 +147,22 @@ int main( int argc, char* argv[] ) {
 
                         quit = true;
                     }
-                    else if(e.type == SDL_KEYDOWN) {
-
-                        if(e.key.keysym.sym == SDLK_w) {
-
-                            if(a + 32 > 255) {
-
-                                a = 255;
-                            }
-                            else {
-                                a += 32;
-                            }
-                        }
-                        else if(e.key.keysym.sym == SDLK_s) {
-
-                            if(a - 32 < 0) {
-
-                                a = 0;
-                            }
-                            else {
-
-                                a -= 32;
-                            }
-                        }
-                    }
                 }
 
-                    SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
-                    SDL_RenderClear(scr);
+                SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
+                SDL_RenderClear(scr);
 
-                    bgTex.render(0, 0);
-                    modTex.setAlpha(a);
+                SDL_Rect* cur = &sprClips[frame / 4];
+                sprSheet.render((SCREEN_WIDTH - cur->w) / 2, (SCREEN_HEIGHT - cur->h) / 2, cur);
 
-                    modTex.render(0, 0);
+                SDL_RenderPresent(scr);
 
-                    SDL_RenderPresent(scr);
+                ++frame;
 
+                if(frame / 4 >= WALK_ANIM_FRAMES) {
 
-
+                    frame = 0;
+                }
             }
         }
     }
