@@ -6,10 +6,10 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
-//#include <SDL_ttf.h>
+#include <SDL_ttf.h>
 
 extern SDL_Renderer* scr;
-//extern TTF_Font* font;
+extern TTF_Font* font;
 
 class Texture {
 

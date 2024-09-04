@@ -3,6 +3,7 @@
 #include <string>
 #include <stdio.h>
 #include <cmath>
+#include <sstream>
 
 // Library headers
 #include <SDL.h>
@@ -29,14 +30,13 @@ SDL_Renderer* scr = NULL;
 
 // Sprite Var
 Texture promptTex;
+Texture timeTex;
 
 // Audio Var
-Mix_Music* music = NULL;
 
-Mix_Chunk* scratch = NULL;
-Mix_Chunk* high = NULL;
-Mix_Chunk* medium = NULL;
-Mix_Chunk* low = NULL;
+// Text Var
+TTF_Font* font = NULL;
+
 
 bool init() {
 
@@ -97,45 +97,21 @@ bool load() {
 
     bool success = true;
 
-    if(!promptTex.loadFile("./assets/prompt.png")) {
+    font = TTF_OpenFont("./assets/lazy.ttf", 28);
+    if(font == NULL) {
 
-        std::cout << "Failed to load texture!\n";
+        std::cout << "Failed to load! Error: " << TTF_GetError() << std::endl;
         success = false;
     }
+    else {
 
-    music = Mix_LoadMUS("./assets/beat.wav");
-    if(music == NULL) {
+        SDL_Color textColor = {0, 0, 0, 255};
 
-        std::cout << "Failed to load .wav file! Error: " << Mix_GetError() << std::endl;
-        success = false;
-    }
+        if(!promptTex.loadText("Press enter to reset start time.", textColor)) {
 
-    scratch = Mix_LoadWAV("./assets/scratch.wav");
-    if( scratch == NULL) {
-
-        std::cout << "Failed to load .wav file! Error: " << Mix_GetError() << std::endl;
-        success = false;
-    }
-
-    high = Mix_LoadWAV("./assets/high.wav");
-    if( high == NULL) {
-
-        std::cout << "Failed to load .wav file! Error: " << Mix_GetError() << std::endl;
-        success = false;
-    }
-
-    medium = Mix_LoadWAV("./assets/medium.wav");
-    if( medium == NULL) {
-
-        std::cout << "Failed to load .wav file! Error: " << Mix_GetError() << std::endl;
-        success = false;
-    }
-
-    low = Mix_LoadWAV("./assets/low.wav");
-    if( low == NULL) {
-
-        std::cout << "Failed to load .wav file! Error: " << Mix_GetError() << std::endl;
-        success = false;
+            std::cout << "Unable to Render Texture from font!\n";
+            success = false;
+        }
     }
 
 return success;
@@ -143,22 +119,10 @@ return success;
 
 void close() {
 
+
     promptTex.free();
-
-    Mix_FreeChunk(scratch);
-    Mix_FreeChunk(high);
-    Mix_FreeChunk(medium);
-    Mix_FreeChunk(low);
-
-    scratch = NULL;
-    high = NULL;
-    medium = NULL;
-    low = NULL;
-
-    Mix_FreeMusic(music);
-    music = NULL;
-
-
+    timeTex.free();
+    TTF_CloseFont(font);
 
     SDL_DestroyRenderer(scr);
     scr = NULL;
@@ -192,6 +156,12 @@ int main( int argc, char* argv[] ) {
 
             SDL_Event e;
 
+            SDL_Color textColor = {0, 0, 0, 255};
+
+            Uint32 startTime = 0;
+
+            std::stringstream timeText;
+
             while(!quit) {
 
                 while(SDL_PollEvent(&e) != 0) {
@@ -200,51 +170,31 @@ int main( int argc, char* argv[] ) {
 
                         quit = true;
                     }
-                    else if(e.type == SDL_KEYDOWN) {
+                    else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN) {
 
-                        switch (e.key.keysym.sym) {
+                        startTime = SDL_GetTicks();
 
-                        case SDLK_1:
-                            Mix_PlayChannel(-1, high, 0);
-                            break;
-                        case SDLK_2:
-                            Mix_PlayChannel(-1, medium, 0);
-                            break;
-                        case SDLK_3:
-                            Mix_PlayChannel(-1, low, 0);
-                            break;
-                        case SDLK_4:
-                            Mix_PlayChannel(-1, scratch, 0);
-                            break;
-                        case SDLK_9:
-                            if(Mix_PlayingMusic() == 0) {
-
-                                Mix_PlayMusic(music, -1);
-                            }
-                            else {
-                                if(Mix_PausedMusic() == 1) {
-
-                                    Mix_ResumeMusic();
-                                }
-                                else {
-
-                                    Mix_PauseMusic();
-                                }
-                            }
-                            break;
-                        case SDLK_0:
-                            Mix_HaltMusic();
-                            break;
-
-                        }
                     }
+                }
+
+                timeText.str("");
+                timeText << "Milliseconds since start time: " << SDL_GetTicks() - startTime;
+
+                if(!timeTex.loadText(timeText.str().c_str(), textColor)) {
+
+                    std::cout << "Unable to render time texture!\n";
                 }
 
                 SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
                 SDL_RenderClear(scr);
 
                 // Actual code goes here
-                promptTex.render(0,0);
+                promptTex.render((SCREEN_WIDTH - promptTex.getW()) / 2, 0);
+
+                                                                    //Div by 2 pushes
+                                                                    // timer off screen
+                timeTex.render((SCREEN_WIDTH - timeTex.getW()) - 50 /* / 2 */, (SCREEN_HEIGHT - timeTex.getH()) / 2);
+
 
                 SDL_RenderPresent(scr);
 

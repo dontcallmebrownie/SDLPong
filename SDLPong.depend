@@ -1,11 +1,13 @@
 # depslib dependency file v1.0
-1725484445 source:e:\files\dev\sdlpong\sdlpong\main.cpp
+1725488618 source:e:\files\dev\sdlpong\sdlpong\main.cpp
 	<iostream>
 	<string>
 	<stdio.h>
 	<cmath>
+	<sstream>
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_mixer.h>
 	<SDL_ttf.h>
 	"Texture.h"
 	"Button.h"
@@ -423,16 +425,26 @@
 
 1725307348 e:\files\dev\sdlpong\sdlpong\sdl2\include\sdl2
 
-1725448080 source:e:\files\dev\sdlpong\sdlpong\lib\texture.cpp
+1725488637 source:e:\files\dev\sdlpong\sdlpong\lib\texture.cpp
 	"Texture.h"
 
 1725483445 source:e:\files\dev\sdlpong\sdlpong\lib\button.cpp
 
 1725483448 e:\files\dev\sdlpong\sdlpong\inlcude\button.h
 
-1725459461 e:\files\dev\sdlpong\sdlpong\inlcude\texture.h
+1725488637 e:\files\dev\sdlpong\sdlpong\inlcude\texture.h
 	<iostream>
 	<string>
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_ttf.h>
+
+1705861352 e:\files\dev\sdlpong\sdlpong\sdl2\include\sdl2\sdl_mixer.h
+	"SDL_stdinc.h"
+	"SDL_rwops.h"
+	"SDL_audio.h"
+	"SDL_endian.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
 

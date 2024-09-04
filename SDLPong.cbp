@@ -42,7 +42,6 @@
 			<Add option="-lSDL2_mixer -lSDL2_ttf" />
 			<Add directory="E:/Files/dev/SDLPong/SDLPong/SDL2/lib" />
 		</Linker>
-		<Unit filename="SDL2/include/Texture.h" />
 		<Unit filename="inlcude/Button.h" />
 		<Unit filename="inlcude/Texture.h" />
 		<Unit filename="lib/Button.cpp" />
