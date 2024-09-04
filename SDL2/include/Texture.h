@@ -22,6 +22,10 @@ public:
 
     void setColor(Uint8 r, Uint8 g, Uint8 b);
 
+    void setBlendMode(SDL_BlendMode blending);
+
+    void setAlpha(Uint8 alpha);
+
     void render(int x, int y, SDL_Rect* clip = NULL);
 
     int getW();

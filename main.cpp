@@ -20,7 +20,8 @@ void close();
 SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
-Texture modColor;
+Texture modTex;
+Texture bgTex;
 
 
 bool init() {
@@ -70,9 +71,19 @@ bool load() {
 
     bool success = true;
 
-    if(!modColor.loadFile("./assets/colors.png")) {
+    if(!modTex.loadFile("./assets/fadeout.png")) {
 
-        std::cout << "Failed to load spritesheet!\n";
+        std::cout << "Failed to load fadeout!\n";
+        success = false;
+    }
+    else {
+
+        modTex.setBlendMode(SDL_BLENDMODE_BLEND);
+    }
+
+    if(!bgTex.loadFile("./assets/fadein.png")) {
+
+        std::cout << "Failed to load BG!\n";
         success = false;
     }
 
@@ -81,7 +92,8 @@ return success;
 
 void close() {
 
-    modColor.free();
+    modTex.free();
+    bgTex.free();
 
     SDL_DestroyRenderer(scr);
     scr = NULL;
@@ -113,9 +125,8 @@ int main( int argc, char* argv[] ) {
 
             SDL_Event e;
 
-            Uint8 r = 255;
-            Uint8 g = 255;
-            Uint8 b = 255;
+            Uint8 a = 255;
+
 
             while(!quit) {
 
@@ -127,49 +138,47 @@ int main( int argc, char* argv[] ) {
                     }
                     else if(e.type == SDL_KEYDOWN) {
 
-                        switch(e.key.keysym.sym) {
+                        if(e.key.keysym.sym == SDLK_w) {
 
-                        case SDLK_q:
-                            r += 32;
-                            break;
+                            if(a + 32 > 255) {
 
-                        case SDLK_w:
-                            g += 32;
-                            break;
+                                a = 255;
+                            }
+                            else {
+                                a += 32;
+                            }
+                        }
+                        else if(e.key.keysym.sym == SDLK_s) {
 
-                        case SDLK_e:
-                            b += 32;
-                            break;
+                            if(a - 32 < 0) {
 
-                        case SDLK_a:
-                            r -= 32;
-                            break;
+                                a = 0;
+                            }
+                            else {
 
-                        case SDLK_s:
-                            g -= 32;
-                            break;
-
-                        case SDLK_d:
-                            b -= 32;
-                            break;
+                                a -= 32;
+                            }
                         }
                     }
-
-
                 }
 
-                SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
-                SDL_RenderClear(scr);
+                    SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
+                    SDL_RenderClear(scr);
 
-                modColor.setColor(r, g, b);
-                modColor.render(0, 0);
+                    bgTex.render(0, 0);
+                    modTex.setAlpha(a);
+
+                    modTex.render(0, 0);
+
+                    SDL_RenderPresent(scr);
 
 
 
-                SDL_RenderPresent(scr);
             }
         }
     }
+
+
 
     close();
 

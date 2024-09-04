@@ -62,6 +62,16 @@ void Texture::setColor(Uint8 r, Uint8 g, Uint8 b) {
     SDL_SetTextureColorMod(tex, r, g, b);
 }
 
+void Texture::setBlendMode(SDL_BlendMode blend) {
+
+    SDL_SetTextureBlendMode(tex, blend);
+}
+
+void Texture::setAlpha(Uint8 alpha) {
+
+    SDL_SetTextureAlphaMod(tex, alpha);
+}
+
 
 void Texture::render(int x, int y, SDL_Rect* clip) {
 
