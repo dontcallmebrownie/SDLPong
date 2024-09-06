@@ -13,7 +13,12 @@
 
 // Custom headers
 #include "Texture.h"
-#include "Button.h"
+#include "Timer.h"
+//#include "Button.h"
+// TODO:
+//      The code originally used with the Button class
+//      doesn't work, figure this out!
+//      Should be pretty easy tbh, just require new render code.
 
 // Display Var
 const int SCREEN_WIDTH = 640;
@@ -29,7 +34,8 @@ SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
 // Sprite Var
-Texture promptTex;
+Texture sPromptTex;
+Texture pPromptTex;
 Texture timeTex;
 
 // Audio Var
@@ -107,9 +113,15 @@ bool load() {
 
         SDL_Color textColor = {0, 0, 0, 255};
 
-        if(!promptTex.loadText("Press enter to reset start time.", textColor)) {
+        if(!sPromptTex.loadText("Press S to Start or Stop Timer", textColor)) {
 
             std::cout << "Unable to Render Texture from font!\n";
+            success = false;
+        }
+
+        if(!pPromptTex.loadText("Press P to Pause or Unpause the timer", textColor)) {
+
+            std::cout << "Failed to load! Error: " << TTF_GetError() << std::endl;
             success = false;
         }
     }
@@ -119,9 +131,10 @@ return success;
 
 void close() {
 
-
-    promptTex.free();
+    sPromptTex.free();
+    pPromptTex.free();
     timeTex.free();
+
     TTF_CloseFont(font);
 
     SDL_DestroyRenderer(scr);
@@ -158,7 +171,7 @@ int main( int argc, char* argv[] ) {
 
             SDL_Color textColor = {0, 0, 0, 255};
 
-            Uint32 startTime = 0;
+            Timer timer;
 
             std::stringstream timeText;
 
@@ -170,15 +183,38 @@ int main( int argc, char* argv[] ) {
 
                         quit = true;
                     }
-                    else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN) {
+                    else if (e.type == SDL_KEYDOWN) {
 
-                        startTime = SDL_GetTicks();
+                        if(e.key.keysym.sym == SDLK_s) {
 
+                            if(timer.isStarted()) {
+
+                                timer.stop();
+                            }
+                            else {
+
+                                timer.start();
+                            }
+                        }
+                        else if(e.key.keysym.sym == SDLK_p) {
+
+                            if(timer.isPaused()) {
+
+                                timer.unpause();
+                            }
+                            else {
+
+                                timer.pause();
+                            }
+                        }
                     }
                 }
 
+
+
+                // Actual code goes here
                 timeText.str("");
-                timeText << "Milliseconds since start time: " << SDL_GetTicks() - startTime;
+                timeText << "Seconds since start time: " <<(timer.getTicks() / 1000.f);
 
                 if(!timeTex.loadText(timeText.str().c_str(), textColor)) {
 
@@ -188,13 +224,9 @@ int main( int argc, char* argv[] ) {
                 SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
                 SDL_RenderClear(scr);
 
-                // Actual code goes here
-                promptTex.render((SCREEN_WIDTH - promptTex.getW()) / 2, 0);
-
-                                                                    //Div by 2 pushes
-                                                                    // timer off screen
-                timeTex.render((SCREEN_WIDTH - timeTex.getW()) - 50 /* / 2 */, (SCREEN_HEIGHT - timeTex.getH()) / 2);
-
+                sPromptTex.render((SCREEN_WIDTH - sPromptTex.getW()) / 2, 5);
+                pPromptTex.render((SCREEN_WIDTH - pPromptTex.getW()) / 2, (pPromptTex.getH()) / 2 + 20);
+                timeTex.render((SCREEN_WIDTH - timeTex.getW()) / 2, (SCREEN_HEIGHT - timeTex.getH()) / 2);
 
                 SDL_RenderPresent(scr);
 
