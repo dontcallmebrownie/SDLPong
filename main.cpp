@@ -34,9 +34,10 @@ SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
 // Sprite Var
-Texture sPromptTex;
-Texture pPromptTex;
-Texture timeTex;
+
+//Texture
+//Texture timeTex;
+Texture FPSTex;
 
 // Audio Var
 
@@ -109,31 +110,13 @@ bool load() {
         std::cout << "Failed to load! Error: " << TTF_GetError() << std::endl;
         success = false;
     }
-    else {
-
-        SDL_Color textColor = {0, 0, 0, 255};
-
-        if(!sPromptTex.loadText("Press S to Start or Stop Timer", textColor)) {
-
-            std::cout << "Unable to Render Texture from font!\n";
-            success = false;
-        }
-
-        if(!pPromptTex.loadText("Press P to Pause or Unpause the timer", textColor)) {
-
-            std::cout << "Failed to load! Error: " << TTF_GetError() << std::endl;
-            success = false;
-        }
-    }
 
 return success;
 }
 
 void close() {
 
-    sPromptTex.free();
-    pPromptTex.free();
-    timeTex.free();
+    FPSTex.free();
 
     TTF_CloseFont(font);
 
@@ -171,9 +154,12 @@ int main( int argc, char* argv[] ) {
 
             SDL_Color textColor = {0, 0, 0, 255};
 
-            Timer timer;
+            Timer fpsTimer;
 
             std::stringstream timeText;
+
+            int countedFrames = 0;
+            fpsTimer.start();
 
             while(!quit) {
 
@@ -183,40 +169,19 @@ int main( int argc, char* argv[] ) {
 
                         quit = true;
                     }
-                    else if (e.type == SDL_KEYDOWN) {
-
-                        if(e.key.keysym.sym == SDLK_s) {
-
-                            if(timer.isStarted()) {
-
-                                timer.stop();
-                            }
-                            else {
-
-                                timer.start();
-                            }
-                        }
-                        else if(e.key.keysym.sym == SDLK_p) {
-
-                            if(timer.isPaused()) {
-
-                                timer.unpause();
-                            }
-                            else {
-
-                                timer.pause();
-                            }
-                        }
-                    }
                 }
 
-
-
                 // Actual code goes here
-                timeText.str("");
-                timeText << "Seconds since start time: " <<(timer.getTicks() / 1000.f);
+                float avgFps = countedFrames / (fpsTimer.getTicks() / 1000.f);
+                if(avgFps > 2000000) {
 
-                if(!timeTex.loadText(timeText.str().c_str(), textColor)) {
+                    avgFps = 0;
+                }
+
+                timeText.str("");
+                timeText << "Average Frames Per Second: " << avgFps;
+
+                if(!FPSTex.loadText(timeText.str().c_str(), textColor)) {
 
                     std::cout << "Unable to render time texture!\n";
                 }
@@ -224,11 +189,10 @@ int main( int argc, char* argv[] ) {
                 SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
                 SDL_RenderClear(scr);
 
-                sPromptTex.render((SCREEN_WIDTH - sPromptTex.getW()) / 2, 5);
-                pPromptTex.render((SCREEN_WIDTH - pPromptTex.getW()) / 2, (pPromptTex.getH()) / 2 + 20);
-                timeTex.render((SCREEN_WIDTH - timeTex.getW()) / 2, (SCREEN_HEIGHT - timeTex.getH()) / 2);
+                FPSTex.render((SCREEN_WIDTH - FPSTex.getW()) / 2, (SCREEN_HEIGHT - FPSTex.getH()) / 2);
 
                 SDL_RenderPresent(scr);
+                ++countedFrames;
 
                 }
             }
