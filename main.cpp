@@ -23,6 +23,8 @@
 // Display Var
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+const int SCREEN_FPS = 60;
+const int SCREEN_TICKSPF = 1000 / SCREEN_FPS;
 
 // Func Protos
 bool init();
@@ -155,6 +157,7 @@ int main( int argc, char* argv[] ) {
             SDL_Color textColor = {0, 0, 0, 255};
 
             Timer fpsTimer;
+            Timer capTimer;
 
             std::stringstream timeText;
 
@@ -162,6 +165,8 @@ int main( int argc, char* argv[] ) {
             fpsTimer.start();
 
             while(!quit) {
+
+                capTimer.start();
 
                 while(SDL_PollEvent(&e) != 0) {
 
@@ -193,6 +198,12 @@ int main( int argc, char* argv[] ) {
 
                 SDL_RenderPresent(scr);
                 ++countedFrames;
+
+                int frameTicks = capTimer.getTicks();
+                if(frameTicks < SCREEN_TICKSPF) {
+
+                    SDL_Delay(SCREEN_TICKSPF - frameTicks);
+                }
 
                 }
             }

@@ -2,28 +2,12 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="lib\Button.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4026" topLine="145" />
-		</Cursor>
-	</File>
-	<File name="SDL2\include\Texture.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="126" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="lib\Texture.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="87" topLine="1" />
+			<Cursor1 position="1001" topLine="9" />
 		</Cursor>
 		<Folding>
-			<Collapse line="47" />
-			<Collapse line="76" />
+			<Collapse line="12" />
 			<Collapse line="87" />
 			<Collapse line="92" />
 			<Collapse line="97" />
@@ -31,9 +15,46 @@
 			<Collapse line="119" />
 		</Folding>
 	</File>
-	<File name="inlcude\Button.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="inlcude\Texture.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="38" topLine="0" />
+			<Cursor1 position="409" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="inlcude\Button.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="184" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="lib\Timer.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="978" topLine="0" />
+		</Cursor>
+		<Folding>
+			<Collapse line="3" />
+			<Collapse line="11" />
+			<Collapse line="21" />
+			<Collapse line="30" />
+			<Collapse line="73" />
+			<Collapse line="78" />
+		</Folding>
+	</File>
+	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3723" topLine="49" />
+		</Cursor>
+		<Folding>
+			<Collapse line="47" />
+			<Collapse line="102" />
+		</Folding>
+	</File>
+	<File name="inlcude\Timer.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="52" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="lib\Button.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
