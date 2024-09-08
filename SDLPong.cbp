@@ -43,9 +43,11 @@
 			<Add directory="E:/Files/dev/SDLPong/SDLPong/SDL2/lib" />
 		</Linker>
 		<Unit filename="inlcude/Button.h" />
+		<Unit filename="inlcude/Dot.h" />
 		<Unit filename="inlcude/Texture.h" />
 		<Unit filename="inlcude/Timer.h" />
 		<Unit filename="lib/Button.cpp" />
+		<Unit filename="lib/Dot.cpp" />
 		<Unit filename="lib/Texture.cpp" />
 		<Unit filename="lib/Timer.cpp" />
 		<Unit filename="main.cpp" />

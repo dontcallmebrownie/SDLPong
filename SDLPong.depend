@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1725584199 source:e:\files\dev\sdlpong\sdlpong\main.cpp
+1725756336 source:e:\files\dev\sdlpong\sdlpong\main.cpp
 	<iostream>
 	<string>
 	<stdio.h>
@@ -11,6 +11,7 @@
 	<SDL_ttf.h>
 	"Texture.h"
 	"Timer.h"
+	"Dot.h"
 
 1725204194 e:\files\dev\sdlpong\sdlpong\sdl2\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -448,9 +449,20 @@
 	"begin_code.h"
 	"close_code.h"
 
-1725578146 e:\files\dev\sdlpong\sdlpong\inlcude\timer.h
+1725753096 e:\files\dev\sdlpong\sdlpong\inlcude\timer.h
 	<SDL.h>
 
 1725582476 source:e:\files\dev\sdlpong\sdlpong\lib\timer.cpp
 	"Timer.h"
+
+1725756300 source:e:\files\dev\sdlpong\sdlpong\lib\dot.cpp
+	"Dot.h"
+
+1725754522 e:\files\dev\sdlpong\sdlpong\inlcude\dot.h
+	<iostream>
+	<string>
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	"Texture.h"
 

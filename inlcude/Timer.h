@@ -3,8 +3,7 @@
 
 #include <SDL.h>
 
-class Timer
-{
+class Timer {
 public:
 
     Timer();

@@ -14,6 +14,7 @@
 // Custom headers
 #include "Texture.h"
 #include "Timer.h"
+#include "Dot.h"
 //#include "Button.h"
 // TODO:
 //      The code originally used with the Button class
@@ -36,10 +37,11 @@ SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
 // Sprite Var
+Dot dot;
 
 //Texture
-//Texture timeTex;
 Texture FPSTex;
+
 
 // Audio Var
 
@@ -113,12 +115,19 @@ bool load() {
         success = false;
     }
 
+    if(!dot.dotTex.loadFile("./assets/dot.bmp")) {
+
+        std::cout << "Couldn't load dot.bmp!\n";
+    }
+
+
 return success;
 }
 
 void close() {
 
     FPSTex.free();
+    dot.dotTex.free();
 
     TTF_CloseFont(font);
 
@@ -174,6 +183,8 @@ int main( int argc, char* argv[] ) {
 
                         quit = true;
                     }
+
+                    dot.handleEvent(e);
                 }
 
                 // Actual code goes here
@@ -184,26 +195,29 @@ int main( int argc, char* argv[] ) {
                 }
 
                 timeText.str("");
-                timeText << "Average Frames Per Second: " << avgFps;
+                timeText << "FPS: " << avgFps;
 
                 if(!FPSTex.loadText(timeText.str().c_str(), textColor)) {
 
                     std::cout << "Unable to render time texture!\n";
                 }
 
-                SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
-                SDL_RenderClear(scr);
+                    dot.mv();
 
-                FPSTex.render((SCREEN_WIDTH - FPSTex.getW()) / 2, (SCREEN_HEIGHT - FPSTex.getH()) / 2);
+                    SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
+                    SDL_RenderClear(scr);
 
-                SDL_RenderPresent(scr);
-                ++countedFrames;
+                    dot.render();
+                    FPSTex.render((FPSTex.getW() - 100), (FPSTex.getH()));
 
-                int frameTicks = capTimer.getTicks();
-                if(frameTicks < SCREEN_TICKSPF) {
+                    SDL_RenderPresent(scr);
+                    ++countedFrames;
 
-                    SDL_Delay(SCREEN_TICKSPF - frameTicks);
-                }
+                    int frameTicks = capTimer.getTicks();
+                    if(frameTicks < SCREEN_TICKSPF) {
+
+                        SDL_Delay(SCREEN_TICKSPF - frameTicks);
+                    }
 
                 }
             }
