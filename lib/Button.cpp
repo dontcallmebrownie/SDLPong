@@ -1,3 +1,21 @@
+/*************************************************************************************/
+/* TODO:
+ Revisit this commit to refactor this class.
+
+commit 17d660aec39cfed5eb945c955f286a02e9876bc5 (HEAD -> tutorial, origin/tutorial)
+Author: david cramer <dontcallmebrownie@gmail.com>
+Date:   Sat Sep 7 19:51:58 2024 -0500
+
+    ***AND THEN REVISIT THE COMMIT IMMEDIATELY AFTER WHICH WILL CONTAIN THIS NOTE***
+
+Note because I'll def forget the solution:
+    moving the sprite sheet and texture into the class and use dot notation to load
+    the assets in will work, if you want to get fancy use a setter func to load it
+
+                ***DO THIS BEFORE MOVING ON TO WRITE THE PONG GAME***
+*/
+/*************************************************************************************/
+
 /*
 
 class Button
