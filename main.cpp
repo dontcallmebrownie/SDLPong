@@ -31,6 +31,7 @@ const int SCREEN_TICKSPF = 1000 / SCREEN_FPS;
 bool init();
 bool load();
 void close();
+bool checkCollision(SDL_Rect a, SDL_Rect b);
 
 // Display related Globals
 SDL_Window* win = NULL;
@@ -146,6 +147,46 @@ void close() {
 
 }
 
+bool checkCollision(SDL_Rect a, SDL_Rect b) {
+
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int botA, botB;
+
+    leftA = a.x;
+    rightA = a.x + a.w;
+    topA = a.y;
+    botA = a.y + a.h;
+
+    leftB = b.x;
+    rightB = b.x + b.w;
+    topB = b.y;
+    botB = b.y + b.h;
+
+    if(botA <= topB){
+
+        return false;
+    }
+
+    if(topA >= botB){
+
+        return false;
+    }
+
+    if(rightA <= leftB){
+
+        return false;
+    }
+
+    if(leftA >= rightB){
+
+        return false;
+    }
+
+return true;
+}
+
 int main( int argc, char* argv[] ) {
 
     if(!init()) {
@@ -162,7 +203,6 @@ int main( int argc, char* argv[] ) {
             bool quit = false;
 
             SDL_Event e;
-
             SDL_Color textColor = {0, 0, 0, 255};
 
             Timer fpsTimer;
@@ -172,6 +212,12 @@ int main( int argc, char* argv[] ) {
 
             int countedFrames = 0;
             fpsTimer.start();
+
+            SDL_Rect wall;
+            wall.x = 300;
+            wall.y = 40;
+            wall.w = 40;
+            wall.h = 400;
 
             while(!quit) {
 
@@ -202,11 +248,13 @@ int main( int argc, char* argv[] ) {
                     std::cout << "Unable to render time texture!\n";
                 }
 
-                    dot.mv();
+                    dot.mv(wall);
 
                     SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
                     SDL_RenderClear(scr);
 
+                    SDL_SetRenderDrawColor(scr, 0x00, 0x00, 0x00, 0xff);
+                    SDL_RenderDrawRect(scr, &wall);
                     dot.render();
                     FPSTex.render((FPSTex.getW() - 100), (FPSTex.getH()));
 

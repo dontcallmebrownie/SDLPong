@@ -429,7 +429,7 @@
 1725488637 source:e:\files\dev\sdlpong\sdlpong\lib\texture.cpp
 	"Texture.h"
 
-1725483445 source:e:\files\dev\sdlpong\sdlpong\lib\button.cpp
+1725757359 source:e:\files\dev\sdlpong\sdlpong\lib\button.cpp
 
 1725483448 e:\files\dev\sdlpong\sdlpong\inlcude\button.h
 
@@ -455,10 +455,10 @@
 1725582476 source:e:\files\dev\sdlpong\sdlpong\lib\timer.cpp
 	"Timer.h"
 
-1725756462 source:e:\files\dev\sdlpong\sdlpong\lib\dot.cpp
+1725845776 source:e:\files\dev\sdlpong\sdlpong\lib\dot.cpp
 	"Dot.h"
 
-1725754522 e:\files\dev\sdlpong\sdlpong\inlcude\dot.h
+1725845888 e:\files\dev\sdlpong\sdlpong\inlcude\dot.h
 	<iostream>
 	<string>
 	<SDL.h>

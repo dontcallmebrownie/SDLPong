@@ -12,6 +12,7 @@
 
 extern const int SCREEN_HEIGHT;
 extern const int SCREEN_WIDTH;
+extern bool checkCollision(SDL_Rect a, SDL_Rect b);
 
 class Dot {
 public:
@@ -25,7 +26,7 @@ public:
 
     void handleEvent(SDL_Event &e);
 
-    void mv();
+    void mv(SDL_Rect &wall);
 
     void render();
 
@@ -35,8 +36,10 @@ public:
 private:
 
     int xPos, yPos;
-
     int xVel, yVel;
+
+    SDL_Rect collider;
+
 };
 
 #endif // DOT_H
