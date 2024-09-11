@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <cmath>
 #include <sstream>
-
+#include <vector>
 // Library headers
 #include <SDL.h>
 #include <SDL_image.h>
@@ -31,14 +31,15 @@ const int SCREEN_TICKSPF = 1000 / SCREEN_FPS;
 bool init();
 bool load();
 void close();
-bool checkCollision(SDL_Rect a, SDL_Rect b);
+bool checkCollision(std::vector<SDL_Rect> &a, std::vector<SDL_Rect> &b);
 
 // Display related Globals
 SDL_Window* win = NULL;
 SDL_Renderer* scr = NULL;
 
 // Sprite Var
-Dot dot;
+Dot dot(0, 0);
+Dot otherDot( SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4 );
 
 //Texture
 Texture FPSTex;
@@ -121,6 +122,15 @@ bool load() {
         std::cout << "Couldn't load dot.bmp!\n";
     }
 
+    // I'm aware that we're loading the same file twice
+    // TODO: Load once assign twice
+
+
+    if(!otherDot.dotTex.loadFile("./assets/dot.bmp")) {
+
+        std::cout << "Couldn't load dot.bmp!\n";
+    }
+
 
 return success;
 }
@@ -147,44 +157,35 @@ void close() {
 
 }
 
-bool checkCollision(SDL_Rect a, SDL_Rect b) {
+bool checkCollision(std::vector<SDL_Rect> &a, std::vector<SDL_Rect> &b) {
 
     int leftA, leftB;
     int rightA, rightB;
     int topA, topB;
     int botA, botB;
 
-    leftA = a.x;
-    rightA = a.x + a.w;
-    topA = a.y;
-    botA = a.y + a.h;
+    for(int aBox = 0; aBox < a.size(); aBox++) {
 
-    leftB = b.x;
-    rightB = b.x + b.w;
-    topB = b.y;
-    botB = b.y + b.h;
+        leftA = a[aBox].x;
+        rightA = a[aBox].x + a[aBox].w;
+        topA = a[aBox].y;
+        botA = a[aBox].y + a[aBox].h;
 
-    if(botA <= topB){
+        for(int bBox = 0; bBox < a.size(); bBox++) {
 
-        return false;
+            leftB = b[bBox].x;
+            rightB = b[bBox].x + b[aBox].w;
+            topB = b[bBox].y;
+            botB = b[bBox].y + b[aBox].h;
+
+            if (((botA <= topB) || (topA >= botB) || (rightA <= leftB) || (leftA >= rightB)) == false) {
+
+                return true;
+            }
+        }
     }
 
-    if(topA >= botB){
-
-        return false;
-    }
-
-    if(rightA <= leftB){
-
-        return false;
-    }
-
-    if(leftA >= rightB){
-
-        return false;
-    }
-
-return true;
+return false;
 }
 
 int main( int argc, char* argv[] ) {
@@ -212,12 +213,6 @@ int main( int argc, char* argv[] ) {
 
             int countedFrames = 0;
             fpsTimer.start();
-
-            SDL_Rect wall;
-            wall.x = 300;
-            wall.y = 40;
-            wall.w = 40;
-            wall.h = 400;
 
             while(!quit) {
 
@@ -248,17 +243,22 @@ int main( int argc, char* argv[] ) {
                     std::cout << "Unable to render time texture!\n";
                 }
 
-                    dot.mv(wall);
+                    dot.mv(otherDot.getColliders());
 
-                    SDL_SetRenderDrawColor(scr, 0xff, 0x00, 0xff, 0xff);
+                    SDL_SetRenderDrawColor(scr, 0xff, 0xff, 0xff, 0xff);
                     SDL_RenderClear(scr);
 
-                    SDL_SetRenderDrawColor(scr, 0x00, 0x00, 0x00, 0xff);
-                    SDL_RenderDrawRect(scr, &wall);
+                    otherDot.render();
                     dot.render();
-                    FPSTex.render((FPSTex.getW() - 100), (FPSTex.getH()));
+
+                   // FPSTex.render(100, 25);
 
                     SDL_RenderPresent(scr);
+
+
+
+
+
                     ++countedFrames;
 
                     int frameTicks = capTimer.getTicks();

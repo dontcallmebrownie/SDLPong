@@ -1,15 +1,49 @@
 #include "Dot.h"
 
-Dot::Dot() {
+Dot::Dot(int x, int y) {
 
-    xPos = 100;
-    yPos = 100;
+    xPos = x;
+    yPos = y;
+
+    colliders.resize(11);
 
     xVel = 0;
     yVel = 0;
 
-    collider.w = D_W;
-    collider.h = D_H;
+    colliders[0].w = 6;
+    colliders[0].h = 1;
+
+    colliders[1].w = 10;
+    colliders[1].h = 1;
+
+    colliders[2].w = 14;
+    colliders[2].h = 1;
+
+    colliders[3].w = 16;
+    colliders[3].h = 2;
+
+    colliders[4].w = 18;
+    colliders[4].h = 2;
+
+    colliders[5].w = 20;
+    colliders[5].h = 6;
+
+    colliders[6].w = 18;
+    colliders[6].h = 2;
+
+    colliders[7].w = 16;
+    colliders[7].h = 2;
+
+    colliders[8].w = 14;
+    colliders[8].h = 1;
+
+    colliders[9].w = 10;
+    colliders[9].h = 1;
+
+    colliders[10].w = 6;
+    colliders[10].h = 1;
+
+    shiftColliders();
  }
 
  void Dot::handleEvent(SDL_Event &e) {
@@ -36,23 +70,24 @@ Dot::Dot() {
     }
  }
 
- void Dot::mv( SDL_Rect &wall) {
+ void Dot::mv(std::vector<SDL_Rect> &otherColliders) {
 
     xPos += xVel;
-    collider.x = xPos;
+    shiftColliders();
 
-    if((xPos < 0) || (xPos + D_W > SCREEN_WIDTH) || checkCollision(collider, wall)) {
+    if((xPos < 0) || (xPos + D_W > SCREEN_WIDTH) || checkCollision(colliders, otherColliders)) {
 
         xPos -= xVel;
-        collider.x = xPos;
+        shiftColliders();
     }
 
     yPos += yVel;
-    collider.y = yPos;
-    if((yPos < 0) || ( yPos + D_H > SCREEN_HEIGHT) || checkCollision(collider, wall)) {
+    shiftColliders();
+
+    if((yPos < 0) || ( yPos + D_H > SCREEN_HEIGHT) || checkCollision(colliders, otherColliders)) {
 
       yPos -= yVel;
-      collider.y = yPos;
+      shiftColliders();
     }
  }
 
@@ -60,3 +95,24 @@ Dot::Dot() {
 
     dotTex.render(xPos, yPos);
  }
+
+
+ void Dot::shiftColliders() {
+
+    int r = 0;
+
+    for(int set = 0; set < colliders.size(); ++ set) {
+
+        colliders[set].x = xPos + (D_W - colliders[set].w / 2);
+
+        colliders[set].y = yPos + r;
+
+        r += colliders[set].h;
+    }
+ }
+
+ std::vector<SDL_Rect> &Dot::getColliders() {
+
+return colliders;
+ }
+
